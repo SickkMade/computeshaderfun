@@ -1,0 +1,26 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+//WHAT ALL THIS BS MEAN???
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+StructuredBuffer<float3> _VertexBuffer;
+RWStructuredBuffer<float4> _ColorBuffer;
+float4x4 _LocalToWorld;
+float4 _Sphere;
+uint _VertexCount;
+
+[numthreads(32,1,1)]
+//remind what id is?
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= _VertexCount){
+        return;
+    }
+    //current vertex to world pos
+    float3 pos = mul(_LocalToWorld, float4(_VertexBuffer[id.x], 1.0)).xyz;
+    float mask = 1.0 - saturate(distance(pos, _Sphere.xyz) / (_Sphere.w*0.5));
+
+    _ColorBuffer[id.x] += float4(mask, 0, 0, 1);
+}
