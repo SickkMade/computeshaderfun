@@ -62,7 +62,7 @@ public class ComputeShaderTutorial : MonoBehaviour
         computeShader.SetBuffer(kernelID, "_ColorBuffer", colorBuffer);
         computeShader.SetInt("_VertexCount", vertexCount);
 
-        computeShader.Dispatch(kernelID, threadGroups, 1, 1);
+        material.SetBuffer("_ColorBuffer", colorBuffer);
     }
 
     void Update(){
